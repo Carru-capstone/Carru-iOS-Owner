@@ -61,30 +61,35 @@ class LogisticRegisterViewModel {
             .store(in: &cancellables)
     }
     
-    func registerLogistic() {
-        guard
-            let selectedWarehouse,
-            let weight = Int(weight),
-            let cost = Int(price)
-        else {
-            logger.printOnDebug("값 설정 확인 필요")
-            return
-        }
-        
-        ownerRepo
-            .registerLogistics(
-                request: .init(
-                    warehouseId: selectedWarehouse.warehouseId,
-                    name: category,
-                    weight: weight,
-                    cost: cost,
-                    deadline: deadline.ISO8601Format()
+    func registerLogistic() -> Future<Bool, Never> {
+        return Future { [weak self] promise in
+            guard
+                let self,
+                let selectedWarehouse,
+                let weight = Int(weight),
+                let cost = Int(price)
+            else {
+                logger.printOnDebug("값 설정 확인 필요")
+                return
+            }
+            
+            ownerRepo
+                .registerLogistics(
+                    request: .init(
+                        warehouseId: selectedWarehouse.warehouseId,
+                        name: category,
+                        weight: weight,
+                        cost: cost,
+                        deadline: deadline.ISO8601Format()
+                    )
                 )
-            )
-            .sink(receiveCompletion: {
-                logger.checkComplition(message: "물류 등록", complition: $0)
-            }, receiveValue: { _ in })
-            .store(in: &cancellables)
+                .sink(receiveCompletion: {
+                    logger.checkComplition(message: "물류 등록", complition: $0)
+                }, receiveValue: { _ in
+                    promise(.success(true))
+                })
+                .store(in: &cancellables)
+        }
     }
     
     func editLogistic() {

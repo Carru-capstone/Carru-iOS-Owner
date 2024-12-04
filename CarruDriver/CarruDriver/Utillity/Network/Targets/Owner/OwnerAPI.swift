@@ -101,12 +101,12 @@ extension OwnerAPI: TargetType {
             return .requestJSONEncodable(request)
         case .approvedLogisticsList(let type):
             return .requestParameters(
-                parameters: ["listType" : type.rawValue],
+                parameters: ["listType" : type.statusID],
                 encoding: URLEncoding.queryString
             )
         case .approvedLogisticDetail(_, let type):
             return .requestParameters(
-                parameters: ["listType" : type.rawValue],
+                parameters: ["listType" : type.statusID],
                 encoding: URLEncoding.queryString
             )
         }

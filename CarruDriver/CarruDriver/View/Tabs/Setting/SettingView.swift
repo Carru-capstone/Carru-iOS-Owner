@@ -110,7 +110,7 @@ struct SettingView: View {
 extension SettingView {
     private func userNameChangeAlert() {
         mainViewManager.inputAlertViewModel = .init(
-            text: "유저 원래이름 바인딩 예정",
+            text: viewModel.profile.name,
             title: "이름 변경",
             cancelAction: {
                 logger.printOnDebug("이름 변경 취소")
@@ -141,11 +141,4 @@ extension SettingView {
                     .store(in: &cancellables)
             })
     }
-}
-
-
-#Preview {
-    @Previewable @State var path: [MainScreen] = []
-    
-    SettingView(path: $path, viewModel: SettingViewModel())
 }

@@ -16,7 +16,7 @@ enum ProgressType: String, CaseIterable, Identifiable {
         switch self {
         case .todo: return 0 
         case .inProgress: return 1
-        case .finished: return 3
+        case .finished: return 2
         }
     }
     

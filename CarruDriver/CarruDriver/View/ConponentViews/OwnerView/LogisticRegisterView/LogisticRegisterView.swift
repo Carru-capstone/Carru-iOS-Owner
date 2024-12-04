@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import Combine
 
 struct LogisticRegisterView: View {
     @EnvironmentObject var mainViewManager: MainViewManager
     @Binding var path: [MainScreen]
     @Bindable var viewModel: LogisticRegisterViewModel
     @FocusState var focusedField: Field?
+    
+    @State var cancellables: [AnyCancellable] = []
     
     enum AddressFindType {
         case departure
@@ -82,7 +85,7 @@ struct LogisticRegisterView: View {
                             placeholder: "도착지 선택"
                         )
                         .onTapGesture {
-                            viewModel.isDestAddressPresent.toggle()
+                            viewModel.isFindAddressPresent.toggle()
                             focusedField = nil
                         }
                     }
@@ -95,13 +98,11 @@ struct LogisticRegisterView: View {
                         CarruDatePickerView(targetDate: $viewModel.deadline)
                         .onTapGesture {
                             viewModel.isFindAddressPresent.toggle()
-//                            viewModel.isDestAddressPresent.toggle()
                             focusedField = nil
                         }
                     }
                     
                     CarruButton {
-                        // TODO: 일단 결과는 로그로 확인..
                         if viewModel.state == .register {
                             viewModel.registerLogistic()
                         } else if viewModel.state == .edit {
@@ -112,17 +113,6 @@ struct LogisticRegisterView: View {
                     }
                     
                     Spacer()
-                }
-                .confirmationDialog(
-                    "도착지 선택",
-                    isPresented: $viewModel.isDestAddressPresent,
-                    titleVisibility: .visible
-                ) {
-//                    Button("주소입력") {
-//                        viewModel.isFindAddressPresent.toggle()
-//                    }
-//                    Button("차고지") {
-//                    }
                 }
                 .sheet(isPresented: $viewModel.isFindAddressPresent) {
                     AddressView(
